@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafe.gitteam1.reserve.MyPageBookingListMapper">
+	<!-- 예약리스트 표시 -->
+	<select id="myPageBookingListM" resultType="com.cafe.gitteam1.reserve.MyPageBookingListVo">
+		 SELECT ri.reserve_date as rdate, ci.cafe_address as caddress, ci.cafe_name as cname, ci.title_photo as img, reserve_id, isCancelled, uuid, payment_price, reserve_name, reserve_phone as phone, reserve_time as time, reserve_4seats as seats4, reserve_2seats as 2seats
+		 FROM reserve_info ri inner join cafe_info ci
+		 on ri.cafe_id = ci.cafe_id
+		 WHERE <![CDATA[ri.reserve_date >= #{nowDate}]]><!-- and  <![CDATA[ri.reserve_date >= #{nowDate}]]> #{today22} #{member_id} //////////////////////// -->
+		 ORDER BY reserve_date asc;
+	</select>
+	<select id="myPageBookingListH" resultType="com.cafe.gitteam1.reserve.MyPageBookingListVo">
+		 SELECT ri.reserve_date as rdate, ci.cafe_address as caddress, ci.cafe_name as cname, ci.title_photo as img, reserve_id, isCancelled, uuid, payment_price, reserve_name, reserve_phone as phone, reserve_time as time, reserve_4seats as seats4, reserve_2seats as 2seats
+		 FROM reserve_info ri inner join cafe_info ci
+		 on ri.cafe_id = ci.cafe_id
+		 WHERE ri.cafe_id = #{id} and <![CDATA[ri.reserve_date >= #{nowDate}]]><!-- and  <![CDATA[ri.reserve_date >= #{nowDate}]]> #{today22} #{member_id} //////////////////////// -->
+		 ORDER BY reserve_date asc;
+	</select>
+	<select id="myPageBookingListC" resultType="com.cafe.gitteam1.reserve.MyPageBookingListVo">
+		 SELECT ri.reserve_date as rdate, ci.cafe_address as caddress, ci.cafe_name as cname, ci.title_photo as img, reserve_id, isCancelled, uuid, payment_price, reserve_name, reserve_phone as phone, reserve_time as time, reserve_4seats as seats4, reserve_2seats as 2seats
+		 FROM reserve_info ri inner join cafe_info ci
+		 on ri.cafe_id = ci.cafe_id
+		 WHERE ri.member_id = #{id} and <![CDATA[ri.reserve_date >= #{nowDate}]]><!-- and  <![CDATA[ri.reserve_date >= #{nowDate}]]> #{today22} #{member_id} //////////////////////// -->
+		 ORDER BY reserve_date asc;
+	</select>
+	<!-- 이전 예약리스트 표시 -->
+	<select id="myPagePastBookingListM" resultType="com.cafe.gitteam1.reserve.MyPageBookingListVo">
+		 SELECT ri.reserve_date as rdate, ci.cafe_address as caddress, ci.cafe_name as cname, ci.title_photo as img, reserve_id, isCancelled, uuid, payment_price, reserve_name, reserve_phone as phone, reserve_time as time, reserve_4seats as seats4, reserve_2seats as 2seats
+		  FROM reserve_info ri inner join cafe_info ci
+		  on ri.cafe_id = ci.cafe_id
+		 WHERE <![CDATA[ri.reserve_date <= #{nowDate}]]> <!--#{today22} #{member_id} ////////////////////////-->
+		 ORDER BY reserve_date desc;
+	</select>	
+	<select id="myPagePastBookingListH" resultType="com.cafe.gitteam1.reserve.MyPageBookingListVo">
+		 SELECT ri.reserve_date as rdate, ci.cafe_address as caddress, ci.cafe_name as cname, ci.title_photo as img, reserve_id, isCancelled, uuid, payment_price, reserve_name, reserve_phone as phone, reserve_time as time, reserve_4seats as seats4, reserve_2seats as seats2
+		  FROM reserve_info ri inner join cafe_info ci
+		  on ri.cafe_id = ci.cafe_id
+		 WHERE ri.cafe_id = #{id} and <![CDATA[ri.reserve_date <= #{nowDate}]]> <!--#{today22} #{member_id} ////////////////////////-->
+		 ORDER BY reserve_date desc;
+	</select>	
+	<select id="myPagePastBookingListC" resultType="com.cafe.gitteam1.reserve.MyPageBookingListVo">
+		 SELECT ri.reserve_date as rdate, ci.cafe_address as caddress, ci.cafe_name as cname, ci.title_photo as img, reserve_id, isCancelled, uuid, payment_price, reserve_name, reserve_phone as phone, reserve_time as time, reserve_4seats as seats4, reserve_2seats as seats2
+		  FROM reserve_info ri inner join cafe_info ci
+		  on ri.cafe_id = ci.cafe_id
+		 WHERE ri.member_id = #{id} and <![CDATA[ri.reserve_date <= #{nowDate}]]> <!--#{today22} #{member_id} ////////////////////////-->
+		 ORDER BY reserve_date desc;
+	</select>	
+	<!-- 예약내역 검색 -->
+	<select id="bookingListSearchM" resultType="com.cafe.gitteam1.reserve.MyPageBookingListVo">
+		 SELECT ri.reserve_date as rdate, ci.cafe_address as caddress, ci.cafe_name as cname, ci.title_photo as img, reserve_id, isCancelled, uuid, payment_price, reserve_name, reserve_phone as phone, reserve_time as time, reserve_4seats as seats4, reserve_2seats as seats2
+		  FROM reserve_info ri inner join cafe_info ci
+		  on ri.cafe_id = ci.cafe_id
+		 WHERE ci.cafe_name like "%${findStr}%" or ri.member_id like "%${findStr}%"
+		 ORDER BY reserve_date asc;
+	</select>
+	<!-- 예약내역 검색 -->
+	<select id="bookingListSearchH" resultType="com.cafe.gitteam1.reserve.MyPageBookingListVo">
+		 SELECT ri.reserve_date as rdate, ci.cafe_address as caddress, ci.cafe_name as cname, ci.title_photo as img, reserve_id, isCancelled, uuid, payment_price, reserve_name, reserve_phone as phone, reserve_time as time, reserve_4seats as seats4, reserve_2seats as seats2
+		  FROM reserve_info ri inner join cafe_info ci
+		  on ri.cafe_id = ci.cafe_id
+		 WHERE ri.cafe_id = #{id} and ri.reserve_name like "%${findStr}%" and ri.member_id like "%${findStr}%"<!-- #{member_id} ////////////////////////-->
+		 ORDER BY reserve_date asc;
+	</select>
+	<!-- 예약내역 검색 -->
+	<select id="bookingListSearchC" resultType="com.cafe.gitteam1.reserve.MyPageBookingListVo">
+		 SELECT ri.reserve_date as rdate, ci.cafe_address as caddress, ci.cafe_name as cname, ci.title_photo as img, reserve_id, isCancelled, uuid, payment_price, reserve_name, reserve_phone as phone, reserve_time as time, reserve_4seats as seats4, reserve_2seats as seats2
+		  FROM reserve_info ri inner join cafe_info ci
+		  on ri.cafe_id = ci.cafe_id
+		 WHERE ri.member_id = #{id} and ci.cafe_name like "%${findStr}%"<!-- #{member_id} ////////////////////////-->
+		 ORDER BY reserve_date asc;
+	</select>	
+	<!-- 예약 취소 -->
+	<update id="delClick" parameterType="String">
+		update reserve_info set
+		isCancelled = 1
+		where uuid = #{_parameter}
+	</update>
+	<!-- stamp수량 확인  -->
+	<select id="stampCheck" resultType="int">
+		select stamp
+		from member
+		where member_id =#{mid}
+	</select>
+	<!-- 쿠폰 환불 -->
+	<update id="cuponUsed" parameterType="int">
+		update cupon set used = 0
+		where cuponSN =#{cuponSN}
+	</update>
+</mapper>

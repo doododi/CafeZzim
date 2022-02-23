@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafe.gitteam1.board.BoardMapper">
+	<select id="qa_totSize" parameterType="String" resultType="Integer">
+		SELECT count(qa_serial) totSize
+		  FROM qa
+		 WHERE subject     like '%${_parameter}%'
+		    OR content     like '%${_parameter}%'
+		  	OR member_name like '%${_parameter}%'
+		    OR member_id   like '%${_parameter}%'
+	</select>
+	
+	<select id="qa_search" parameterType="com.cafe.gitteam1.board.QaPage" resultType="com.cafe.gitteam1.board.QaVo">
+		SELECT qa_serial, member_name, content, grpno, depth, isSecret, repl_id,
+					 DATE_FORMAT(created_date, '%y-%m-%d') AS created_date,
+					 (SELECT COUNT(photo_serial) FROM qa_photo WHERE qa_serial = q.qa_serial) file_cnt,
+					 IF(depth > 0,
+					 		concat(lpad('', depth*2, '&#160;'), concat('└ ', subject)), subject) subject
+		  FROM qa q
+		 WHERE subject     like '%${qa_search}%'
+			  OR content     like '%${qa_search}%'
+			  OR member_name like '%${qa_search}%'
+			  OR member_id   like '%${qa_search}%'
+ 		  ORDER BY grpno DESC, depth ASC
+		  LIMIT ${startNo-1}, ${listSize}
+	</select>
+	
+	<select id="qa_count_grpno" parameterType="String">
+		SELECT COUNT(grpno) AS count_grpno
+		  FROM qa
+		 WEHRE grpno = #{_parameter}
+	</select>
+	
+	<select id="qa_view" parameterType="String" resultType="com.cafe.gitteam1.board.QaVo">
+		SELECT qa_serial, member_id, member_name, subject, content, 
+					 created_date, depth, isSecret, repl_id
+		  FROM qa
+		 WHERE qa_serial = #{_parameter}
+	</select>
+	
+	<select id="qa_show_file" parameterType="String" resultType="com.cafe.gitteam1.board.QaPhotoVo">
+		SELECT qa_file, qa_origin_file
+		  FROM qa_photo
+		 WHERE qa_serial = #{_parameter}
+	</select>
+	
+	<select id="qa_show_origin_file" parameterType="String" resultType="com.cafe.gitteam1.board.QaPhotoVo">
+		SELECT qa_origin_file
+		  FROM qa_photo
+		 WHERE qa_serial = #{_parameter}
+	</select>
+	
+	<select id="qa_search_grpno" parameterType="String" resultType="String">
+		SELECT grpno
+		  FROM qa
+		 WHERE qa_serial = #{_parameter}
+	</select>
+	
+	<select id="qa_view_grpno" parameterType="String" resultType="com.cafe.gitteam1.board.QaVo">
+		SELECT qa_serial, member_id, member_name, subject, content, created_date, depth, count(grpno) AS grpno
+		  FROM qa
+		 WHERE grpno = #{_parameter}
+	</select>
+	
+	<insert id="qa_insert" parameterType="com.cafe.gitteam1.board.QaVo">
+		INSERT INTO qa(member_id, member_name, subject, content, repl_id)
+		VALUES (#{member_id}, #{member_name}, #{subject}, #{content}, #{member_id})
+	</insert>
+	
+	<select id="qa_last_insert_id" resultType="Integer">
+		SELECT last_insert_id()
+	</select>
+	
+	<update id="qa_insert_isSecret" parameterType="com.cafe.gitteam1.board.QaVo">
+		UPDATE qa
+		   SET isSecret = #{isSecret}
+		 WHERE qa_serial = last_insert_id()
+	</update>
+	
+	<update id="qa_insert_grpno" parameterType="com.cafe.gitteam1.board.QaVo">
+		UPDATE qa
+		   SET grpno = qa_serial
+		 WHERE qa_serial = last_insert_id()
+	</update>
+	
+	<insert id="qa_insert_file" parameterType="com.cafe.gitteam1.board.QaPhotoVo">
+		INSERT INTO qa_photo(qa_file, qa_origin_file, qa_serial)
+		VALUES (#{qa_file}, #{qa_origin_file}, #{qa_serial})
+	</insert>
+	
+	<update id="qa_modify">
+		UPDATE qa
+		   SET subject=#{subject}, content=#{content}
+		 WHERE qa_serial = #{qa_serial}
+	</update>
+	
+	<delete id="qa_modify_file" parameterType="List">
+		DELETE FROM qa_photo
+		 WHERE qa_file in
+		 <foreach collection="list" item="file" open="(" close=")" separator=",">
+		 	#{file}
+		 </foreach>
+	</delete>
+	
+	<insert id="qa_insert_repl" parameterType="com.cafe.gitteam1.board.QaVo">
+		INSERT INTO qa(member_id, member_name, subject, content, grpno, depth)
+		VALUES (#{member_id}, #{member_name}, #{subject}, #{content}, #{qa_serial}, "1")
+	</insert>
+	
+	<select id="qa_repl_id" resultType="String">
+		SELECT member_id
+		  FROM qa
+		 WHERE grpno = #{qa_serial}
+	</select>
+	
+	<update id="qa_insert_repl_id">
+		UPDATE qa
+		   SET repl_id = #{repl_id}
+		 WHERE grpno = ${qa_serial}
+	</update>
+	
+	<delete id="qa_delete" parameterType="String">
+		DELETE FROM qa
+		 WHERE grpno = #{_parameter}
+	</delete>
+	
+	<select id="qa_search_repl" parameterType="String" resultType="Integer">
+		SELECT COUNT(grpno)
+		  FROM qa
+		 WHERE grpno = #{_parameter}
+	</select>
+	
+	<select id="qa_search_serial" parameterType="String" resultType="String">
+		SELECT qa_serial
+		  FROM qa
+		 WHERE grpno = #{_parameter}
+		   AND depth = "1"
+	</select>
+	
+	<delete id="qa_delete_repl" parameterType="String">
+		DELETE FROM qa
+		 WHERE qa_serial = #{_parameter}
+	</delete>
+	
+	<select id="qa_file_list" parameterType="String" resultType="com.cafe.gitteam1.board.QaPhotoVo">
+		SELECT photo_serial, qa_file, qa_origin_file, qa_serial
+		  FROM qa_photo
+		 WHERE qa_serial = #{_parameter}
+	</select>
+	
+	<delete id="qa_delete_file" parameterType="String">
+		DELETE FROM qa_photo
+		 WHERE qa_serial = #{_parameter}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafe.gitteam1.member.MemberMapper">
+	<select id="signInCheck" parameterType="com.cafe.gitteam1.member.MemberVo" resultType="String">
+		SELECT member_name
+		  FROM member
+		 WHERE member_id = #{member_id}
+		   AND password = #{password}
+	</select>
+	
+	<select id="viewMember" parameterType="com.cafe.gitteam1.member.MemberVo" resultType="com.cafe.gitteam1.member.MemberVo">
+		SELECT cafe_id, member_id, member_name, member_email, member_grade, member_phone
+		  FROM member
+		 WHERE member_id = #{member_id}
+		   AND password = #{password}
+	</select>
+	
+	<select id="searchId" parameterType="com.cafe.gitteam1.member.MemberVo" resultType="com.cafe.gitteam1.member.MemberVo">
+	SELECT member_id, member_grade
+	  FROM member
+	 WHERE member_name = #{member_name}
+	   AND member_phone = #{member_phone}
+	</select>
+	
+	<select id="viewId" parameterType="com.cafe.gitteam1.member.MemberVo" resultType="String">
+		SELECT member_id
+		  FROM member
+		 WHERE member_name = #{member_name}
+		   AND member_phone = #{member_phone}
+	</select>
+
+	<select id="searchPw" parameterType="com.cafe.gitteam1.member.MemberVo" resultType="com.cafe.gitteam1.member.MemberVo">
+		SELECT password, member_grade
+		  FROM member
+		 WHERE member_id = #{member_id}
+		   AND member_name = #{member_name}
+		   AND member_email = #{member_email}
+	</select>
+
+	<update id="changePw" parameterType="String">
+		UPDATE member
+		   SET password = #{newPassword}
+		 WHERE member_id = #{member_id}
+	</update>
+	
+	<select id="findKakao" parameterType="java.util.HashMap" resultType="com.cafe.gitteam1.member.MemberVo">
+		SELECT *
+		  FROM member
+		 WHERE member_name = #{nickname}
+		   AND member_id = #{email}
+	</select>
+	
+	<insert id="kakaoInsert" parameterType="java.util.HashMap">
+		INSERT INTO member(member_name, member_id, isSocial)
+		VALUES (#{nickname}, #{email}, 1)
+	</insert>
+	
+	<update id="autoLogin" parameterType="java.util.Map">
+		UPDATE member
+		   SET session_id = #{session_id}, limit_date = #{limit_date}
+		 WHERE member_id = #{member_id}
+	</update>
+	
+	<select id="selectSession" parameterType="String">
+		SELECT *
+		  FROM member
+		 WHERE session_id = #{session_id}
+	</select>
+</mapper> 

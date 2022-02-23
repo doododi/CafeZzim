@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+
+.dayPicker, .select-start, .select-end, .table-count {
+	color: #616368;
+	border: 1px solid #D7D6DA;
+	border-radius: 0.25rem;
+	line-height: 1.5;
+}
+
+.select-time, .choose-table {
+	display: none;
+}
+
+#minus-time, #minus-table {
+	display: none;
+}

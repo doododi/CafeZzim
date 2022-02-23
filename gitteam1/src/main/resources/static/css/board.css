@@ -1,0 +1,238 @@
+@charset "UTF-8";
+
+/*
+ * 카페 예약 공지사항 페이지
+ * 2022.01.22
+ * 작성자 : 임소망
+ */
+ 
+
+/* 공통 ---------------------------------------------------*/
+
+.view .subject {
+	height: 45px;
+	vertical-align: center;
+}
+
+.view .writer_name {
+	height: 45px;
+	vertical-align: center;
+}
+
+.btnNormalZone {
+	text-align: right;
+}
+
+.btnNormal {
+	width: 44px;
+	height: 25px;
+	padding: 2px 8px;
+	display: inline-block;
+	border: 1px solid #d5d5d5;
+	text-align: center;
+	text-decoration: none;
+	vertical-align: middle;
+	background-color: #fff;
+	font-size: 14px;
+	color: #616398;
+}
+
+.btnNormalFix {
+	width: 80px;
+	padding: 6px 8px;
+	display: inline-block;
+	border: 1px solid #d5d5d5;
+	text-align: center;
+	text-decoration: none;
+	vertical-align: middle;
+	background-color: #fff;
+	color: #616398;
+}
+
+.prev-next-board {
+	margin: 40px 0;
+	padding: 0;
+	vertical-align: middle;
+	
+}
+
+.prev-next-board ul {
+	padding: 0;
+}
+
+.prev-next-board li {
+	list-style: none;
+}
+
+.prev-next-board strong {
+	padding: 10px 45px;
+	border-right: 1px solid #e8e8e8;
+}
+
+.prev-next-board a {
+	padding-left: 25px;
+	text-decoration: none;
+	color: #616398;
+}
+
+.prev-next-board .prev {
+	border-top: 1px solid #e8e8e8;
+	border-bottom: 1px solid #e8e8e8;
+	line-height: 45px;
+	height: 45px;
+}
+
+.prev-next-board .next {
+		line-height: 45px;
+		height: 45px;
+		border-bottom: 1px solid #e8e8e8;
+}
+
+.inputTypeText {
+	width: 162px;
+	height: 25px;
+	padding: 2px 4px;
+	border: 1px solid #d5d5d5;
+	color: #616398;
+	vertical-align: middle;
+	font-size: 14px;
+}
+
+.search_key {
+	height: 25px;
+	line-height: 25px;
+	margin: 0 2px 0 0;
+	min-width: 80px;
+	color: #616398;
+	border: 1px solid #d5d5d5;
+	background-color: #fff;
+	vertical-align: middle;
+	font-size: 14px;
+}
+
+.searchZone {
+	text-align: right;
+}
+
+.subjectText {
+	width: 100%;
+	height: 30px;
+	border: 1px solid #d5d5d5;
+}
+
+.btnNormalZone .btn {
+	display: inline-block;
+	width: 75px;
+}
+
+.btnChooseZone {
+	border: 1px solid #fff;
+	line-height: 80px;
+}
+
+.btnChooseZone .btn {
+	display: inline-block;
+	width: 75px;
+}
+
+.btnChooseZone .btnSave {
+	text-align: right;
+}
+
+.insert .subject {
+	padding-left: 100px;
+}
+
+input[class="secretYn"] {
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+.secret-label {
+	vertical-align: top;
+}
+
+/* 공지사항 ---------------------------------------------------*/
+.form-board-notice {
+ 	width: 100%;
+ 	max-width: 950px;
+ 	padding: 20px;
+ 	margin: auto;
+}
+
+.form-board-notice th {
+	text-align: center;
+}
+
+.form-board-notice .num {
+	text-align: center;
+}
+
+.form-board-notice .writer-name {
+	text-align: center;
+}
+
+.form-board-notice .notice_insert {
+	text-align: right;
+}
+
+.form-board-notice-view {
+	width: 100%;
+	max-width: 1000px;
+	padding: 20px;
+	margin: auto;
+}
+
+.form-board-notice-view table {
+	max-width: 1000px;
+	margin: 40px auto;
+	box-sizing: border-box;
+}
+
+.form-board-notice-view .main-text {
+	height: 300px;
+	padding: 15px;
+}
+
+/* 문의게시판(Q&A) ---------------------------------------------------*/
+
+.form-board-qa {
+	width: 100%;
+ 	max-width: 950px;
+ 	padding: 20px;
+ 	margin: auto;
+}
+
+.form-board-qa th {
+	text-align: center;
+}
+
+.form-board-qa .subject {
+	padding-left: 20px;
+}
+
+.form-board-qa .num {
+	text-align: center;
+}
+
+.form-board-qa .writer-name {
+	text-align: center;
+}
+
+.form-board-qa .write-day {
+	text-align: center;
+}
+
+.form-board-qa .qa_insert {
+	text-align: right;
+}
+
+.form-board-qa-view {
+	width: 100%;
+	max-width: 1000px;
+	padding: 20px;
+	margin: auto;
+}
+

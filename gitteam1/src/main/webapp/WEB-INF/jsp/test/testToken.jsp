@@ -1,0 +1,31 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<button type="button" id="btnGetToken">토큰 발급</button>
+<p>${token }</p>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+var btnGetToken = document.getElementById("btnGetToken");
+btnGetToken.addEventListener("click",function(){
+var token;
+$.ajax({
+		url : "/getIamToken",
+		method : "post", // POST method
+		success : function(data) {
+			token = data;
+			console.log(token);
+
+		}
+	});
+});
+</script>
+
+</body>
+</html>

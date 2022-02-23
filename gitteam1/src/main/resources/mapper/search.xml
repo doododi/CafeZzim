@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafe.gitteam1.search.SearchMapper">
+	<select id="cafeSearch" parameterType="com.cafe.gitteam1.search.SearchVo" resultType="com.cafe.gitteam1.search.CafeInfoVo">
+	SELECT C.cafe_id as cid,
+	cafe_name as name,
+	cafe_address as address,
+	cafe_detail AS detail,
+	title_photo AS thumb,
+	lat,
+	lng,
+	ROUND((6371*acos(cos(radians(${centerLat}))*cos(radians(lat))*cos(radians(lng)-radians(${centerLng}))+sin(radians(${centerLat}))*sin(radians(lat)))),3) AS distance,
+	COUNT(R.cafe_id) as rcnt,
+	ROUND( AVG(R.review_score),1 ) AS rating, 
+	(CASE WHEN (C.avail_4seats+C.avail_2seats)*((C.end_time - C.start_time)/10000)<![CDATA[<]]> (SELECT SUM(reserve_4seats) + SUM(reserve_2seats) FROM reserve_info WHERE reserve_date=#{date} and cafe_id=C.cafe_id ) THEN "nope" else "ok" END) as isAvailable
+	FROM cafe_info C
+	left join review R
+	on C.cafe_id = R.cafe_id
+	Group by C.cafe_id
+	HAVING C.cafe_name LIKE "%${findStr}%" OR C.cafe_id IN(SELECT cafe_id FROM cafe_searchname WHERE search_name like "%${findStr}%")
+  <if test="sortBy != null and sortBy !=''"> ORDER BY
+  <choose>
+    <when test="sortBy eq 'recommend'"> rating desc, rcnt desc</when>
+    <when test="sortBy eq 'rating'"> rating desc</when>
+    <when test="sortBy eq 'like'"> rcnt desc</when>
+    <when test="sortBy eq 'distance'"> distance </when>
+    <otherwise> REG_DATE</otherwise>
+  </choose>
+  </if>
+	limit ${startNo},${listSize}
+	</select>
+	
+	<select id="chkWork" parameterType="com.cafe.gitteam1.reserve.ReserveVo" resultType="String">
+	select off_type as offtype from dayoff where cafe_id=#{cafe_id} and off_date=#{reserve_date}
+	
+	</select>
+
+	<select id="cafeFindName" resultType="String">
+	SELECT cafe_name FROM cafe_info WHERE cafe_name like "%${_parameter}%"
+	</select>
+	
+	<select id="cafeFindLocation" resultType="String">
+	SELECT search_name FROM cafe_searchname WHERE search_name like "%${_parameter}%"
+	</select>
+	
+	<select id="viewCafe" resultType="com.cafe.gitteam1.search.CafeInfoVo">
+	SELECT C.cafe_id as cid,
+	cafe_name as name,
+	cafe_address as address,
+	cafe_detail AS detail,
+	title_photo AS thumb,
+	lat,
+	lng,
+	ROUND( AVG(R.review_score),1 ) AS rating
+	FROM cafe_info C
+	left join review R
+	on C.cafe_id = R.cafe_id
+	Group by C.cafe_id
+	HAVING C.cafe_id=#{_parameter};
+	</select>
+	
+	<select id="viewOtherPhoto" resultType="String">
+	select photo_name as photoName from other_photo where cafe_id=#{_parameter}
+	</select>
+	
+	<select id="viewReview" resultType="com.cafe.gitteam1.search.ReviewVo">
+	select cafe_id as cid, member_id as mid, review_score as score, review_content as content, review_photo as photo from review where cafe_id=${_parameter}
+	</select>
+	
+	<select id="viewMenu" resultType="com.cafe.gitteam1.search.MenuVo">
+	SELECT menu_name as name, menu_price as price, menu_type as type FROM menu WHERE cafe_id=#{_parameter}
+	</select>
+	
+	<select id="viewReserv" resultType="com.cafe.gitteam1.search.ReservInfoVo">
+	SELECT reserve_id as rid, C.cafe_id as cid, R.member_id as mid, C.cafe_name as cname, title_photo as photo, isCancelled, reserve_date as rdate, reserve_time as rtime, reserve_name as rname, reserve_phone as phone, reserve_4seats as r4seats, reserve_2seats as r2seats, request, payment_price as price, payment_method as method, payment_date as pdate 
+	from reserve_info R
+	left join cafe_info C
+	on C.cafe_id = R.cafe_id
+	WHERE reserve_id=#{_parameter}
+	</select>
+	
+	<select id="viewReservMenu" resultType="com.cafe.gitteam1.search.MenuVo">
+	select amt, menu_name name, menu_price as price from reserve_menu R join menu M on M.menu_id = R.menu_id WHERE reserve_id=#{_parameter}
+	</select>
+	
+	<insert id="insertReview" parameterType="com.cafe.gitteam1.search.ReviewVo">
+	insert into review(cafe_id,member_id,review_score,review_content,review_photo)
+	values(${cid},#{mid},${score},#{content},#{photo})
+	</insert>
+	
+	<insert id="zzimIns" parameterType="com.cafe.gitteam1.search.ZzimVo">
+	insert into zzim(member_id,cafe_id) values(#{mid},#{cid})
+	</insert>
+	
+	<delete id="zzimDel" parameterType="com.cafe.gitteam1.search.ZzimVo">
+	delete from zzim where member_id=#{mid} and cafe_id=#{cid}
+	</delete>
+	
+	<select id="zzimCafe" parameterType="com.cafe.gitteam1.search.ZzimVo" resultType="String">
+	select (CASE WHEN member_id=#{mid} THEN "fas" else "far" END) as className from zzim where cafe_id=#{cid} and member_id=#{mid}
+	</select>
+
+</mapper>

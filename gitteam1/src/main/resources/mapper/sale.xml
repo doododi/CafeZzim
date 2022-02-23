@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafe.gitteam1.sale.SaleMapper">
+	<select id="selectYear" parameterType="com.cafe.gitteam1.sale.SaleVo" resultType="com.cafe.gitteam1.reserve.ReserveVo">
+		select ci.cafe_id, cafe_name, sum(payment_price) sales 
+		from cafe_info ci 
+		join reserve_info ri 
+		on ci.cafe_id = ri.cafe_id 
+		where year(payment_date)=#{sale_year} and month(payment_date)=#{sale_month} and isCancelled=0 
+		group by cafe_name 
+		order by sales desc
+	</select>
+	<select id="chart" resultType="com.cafe.gitteam1.reserve.ReserveVo">
+		select sum(payment_price) sales, concat(year(payment_date),"-",month(payment_date)) pdate
+		from reserve_info 
+		where isCancelled=0
+		group by pdate
+	</select>
+</mapper>

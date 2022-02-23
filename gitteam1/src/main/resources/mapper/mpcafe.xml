@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafe.gitteam1.mypage_cafe.mpcafeMapper">
+
+<select id="search" resultType="com.cafe.gitteam1.mypage_cafe.mpcafeVo">
+select title_photo, cafe_name, cafe_address, cafe_id
+from cafe_info c
+where cafe_id = #{findStr}
+or cafe_name like '%${findStr}%'
+</select>
+
+<select id="dayoffSelect" parameterType="String" resultType="com.cafe.gitteam1.mypage_cafe.dayoffVo">
+	select off_id, cafe_id, off_date, DATE_FORMAT(start_time, '%H:%i') start_time, DATE_FORMAT(end_time, '%H:%i') end_time, off_type from dayoff where cafe_id = ${cafe_id} and off_date > CURRENT_DATE() ORDER BY off_date ASC;
+</select>
+
+<select id="view" parameterType="String" resultType="com.cafe.gitteam1.mypage_cafe.mpcafeVo">
+	select cafe_id, title_photo, cafe_name, cafe_address, cafe_detail, avail_4seats, avail_2seats from cafe_info where cafe_id = #{cafe_id}
+</select>
+
+<select id="otherphotos" parameterType="String" resultType="com.cafe.gitteam1.mypage_cafe.mpcafe_listVo">
+	select photo_name from other_photo where cafe_id = #{cafe_id}
+</select>
+
+<select id="cafesearch" parameterType="String" resultType="com.cafe.gitteam1.mypage_cafe.mpcafe_listVo">
+	select search_name, scname_id from cafe_searchname where cafe_id = #{cafe_id}
+</select>
+
+<select id="menu" parameterType="String" resultType="com.cafe.gitteam1.mypage_cafe.mpcafe_listVo">
+	select * from menu where cafe_id = #{cafe_id}
+</select>
+
+<update id="modify" parameterType="com.cafe.gitteam1.mypage_cafe.mpcafeVo">
+	update cafe_info set cafe_name=#{cafe_name}, cafe_address=#{cafe_address}, cafe_detail=#{cafe_detail}, avail_4seats=#{avail_4seats}, avail_2seats=#{avail_2seats}
+	where cafe_id = #{cafe_id}
+</update>
+
+<update id="modifyTitle" parameterType="com.cafe.gitteam1.mypage_cafe.mpcafeVo">
+	update cafe_info set title_photo=#{title_photo}
+	where cafe_id = #{cafe_id}
+</update>
+
+<insert id="insertOff" parameterType="com.cafe.gitteam1.mypage_cafe.dayoffVo">
+	insert into dayoff(cafe_id, off_date, start_time, end_time, off_type)
+	values (#{cafe_id}, #{off_date}, #{start_time}, #{end_time}, #{off_type})
+</insert>
+
+<insert id="insertOffday" parameterType="com.cafe.gitteam1.mypage_cafe.dayoffVo">
+	insert into dayoff(cafe_id, off_date, off_type)
+	values (#{cafe_id}, #{off_date}, #{off_type})
+</insert>
+
+<insert id="insertMenu" parameterType="com.cafe.gitteam1.mypage_cafe.mpcafe_listVo">
+	insert into menu(cafe_id, menu_name, menu_price, menu_type)
+	values (#{cafe_id}, #{menu_name}, #{menu_price}, #{menu_type})
+</insert>
+
+<insert id="scnInsert" parameterType="com.cafe.gitteam1.mypage_cafe.mpcafe_listVo">
+	insert into cafe_searchname(cafe_id, search_name)
+	values (#{cafe_id}, #{search_name})
+</insert>
+
+<delete id="deleteOff" parameterType="String">
+	delete from dayoff where off_id=#{off_id}
+</delete>
+
+<delete id="deleteMenu" parameterType="String">
+	delete from menu where menu_id=#{menu_id}
+</delete>
+
+<delete id="deleteScn" parameterType="String">
+	delete from cafe_searchname where cafe_id=#{cafe_id}
+</delete>
+
+<insert id="attInsert" parameterType="com.cafe.gitteam1.mypage_cafe.mpcafe_listVo">
+		insert into other_photo(cafe_id, photo_name) values(#{cafe_id}, #{photo_name})
+</insert>
+
+<delete id="deleteOtherphoto" parameterType="String">
+	delete from other_photo where photo_name=#{photo_name}
+</delete>
+
+</mapper>

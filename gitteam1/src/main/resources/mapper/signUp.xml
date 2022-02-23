@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafe.gitteam1.signUp.SignUpMapper">
+	<insert id="join" parameterType="com.cafe.gitteam1.member.MemberVo">
+		insert into member(member_id, member_name, password, member_phone, member_email, member_grade) 
+		values(#{member_id},#{member_name},#{password},#{member_phone},#{member_email},#{member_grade})	
+	</insert>
+	<select id="idCheck" parameterType="String" resultType="Integer">
+		select count(member_id) from member 
+		where member_id=#{_parameter}
+	</select>
+	<select id="emailCheck" parameterType="String" resultType="Integer">
+		select count(member_email) from member 
+		where member_email=#{_parameter}
+	</select>
+	<select id="searchMember" parameterType="String" resultType="com.cafe.gitteam1.member.MemberVo">
+		select member_id, member_name from member 
+		where member_id like "%${_parameter}%" or member_name like "%${_parameter}%"
+	</select>
+	<select id="searchMemberView" parameterType="String" resultType="com.cafe.gitteam1.member.MemberVo">
+		select * from member where member_id=#{member_id}
+	</select>
+	<update id="memberModify" parameterType="com.cafe.gitteam1.member.MemberVo">
+		update member 
+		set password=#{password}, member_grade=#{member_grade}, member_name=#{member_name}, 
+		member_phone=#{member_phone}, member_email=#{member_email}
+		where member_id=#{member_id}
+	</update>
+	<update id="memberCancel" parameterType="com.cafe.gitteam1.member.MemberVo">
+		update member 
+		set member_grade=#{member_grade}
+		where member_id=#{member_id}
+	</update>
+</mapper>

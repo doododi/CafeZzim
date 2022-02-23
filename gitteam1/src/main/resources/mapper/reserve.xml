@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafe.gitteam1.reserve.ReserveMapper">
+	<select id="loadCupon" resultType="int">
+		select cupon from member where member_id=#{mid}
+	</select>
+	
+	<select id="cuponList" resultType="com.cafe.gitteam1.reserve.CuponVo">
+		select * from cupon where member_id=#{mid}
+	</select>
+	<select id="orderMenu" resultType="com.cafe.gitteam1.search.MenuVo">
+		SELECT menu_name as name, menu_price as price, menu_type as type
+		FROM menu
+		where cafe_id=#{cid}
+	</select>
+	
+	<select id="viewCafe" resultType="com.cafe.gitteam1.search.CafeInfoVo">
+	SELECT C.cafe_id as cid,
+	cafe_name as name,
+	cafe_address as address,
+	title_photo AS thumb,
+	lat,
+	lng,
+	ROUND( AVG(R.review_score),1 ) AS rating
+	FROM cafe_info C
+	left join review R
+	on C.cafe_id = R.cafe_id
+	Group by C.cafe_id
+	HAVING C.cafe_id=#{cid};
+	</select>
+	
+	<insert id="reserveResult" parameterType="com.cafe.gitteam1.reserve.ReserveVo">
+		insert into reserve_info(
+		cafe_id, member_id, isCancelled, reserve_date, reserve_time, 
+		reserve_name, reserve_phone, reserve_4seats, reserve_2seats, request, 
+		payment_price, payment_method, payment_date, uuid) 
+		 values( #{cafe_id}, #{member_id}, 0, #{reserve_date}, #{reserve_time}, 
+		 #{reserve_name}, #{reserve_phone}, 1, 0, #{request}, 
+		 #{payment_price}, 'card', #{reserve_date}, #{uuid} )
+	</insert>
+	
+	<update id="stamp" parameterType="com.cafe.gitteam1.reserve.ReserveVo">
+		update member set stamp=stamp+#{orderCnt}
+		where member_id =#{member_id}
+	</update>
+	
+	<select id="stampCheck" resultType="int">
+		select stamp
+		from member
+		where member_id =#{mid}
+	</select>
+	
+<!-- 	<update id="cuponInsert" parameterType="String">
+		update member set cupon=cupon+1
+		where member_id =#{mid}
+	</update> -->
+	<insert id="cuponInsert" parameterType="String">
+		insert into cupon(member_id, cupon_name, effect, discount, orderMin, discountMax )
+		values(#{mid}, '20% 할인쿠폰', '*', 20, 0, 10000);
+	</insert>
+	<update id="stampReset" parameterType="String">
+		update member set stamp=stamp-10
+		where member_id =#{mid}
+	</update>
+	
+	<update id="cuponUse" parameterType="int">
+		update cupon set used = 1
+		where cuponSN =#{cuponSN}
+	</update>
+<!-- 	<update id="cuponUse" parameterType="String">
+		update member set cupon=cupon-1
+		where member_id =#{mid}
+	</update> -->
+	
+	<select id="workTime" parameterType="com.cafe.gitteam1.reserve.ReserveVo" resultType="com.cafe.gitteam1.reserve.ReserveTimeVo">
+	select start_time as stime,
+	((end_time - start_time)/10000) as wtime
+	from cafe_info where cafe_id = #{cafe_id}
+	</select>
+	
+	<select id="offChk" parameterType="com.cafe.gitteam1.reserve.ReserveVo" resultType="com.cafe.gitteam1.reserve.ReserveTimeVo">
+	SELECT off_date as offdate, start_time as offstart, end_time as offend, off_type as offtype FROM dayoff WHERE cafe_id=#{cafe_id} AND off_date=#{reserve_date}
+	</select>
+	
+	<select id="viewTimeTable" parameterType="com.cafe.gitteam1.reserve.ReserveVo" resultType="String">
+	SELECT (case 
+	when (C.avail_4seats <![CDATA[<=]]> (SELECT ifnull(SUM(reserve_4seats),0) FROM reserve_info WHERE reserve_date=#{reserve_date} AND reserve_time=#{reserve_time}) 
+	AND C.avail_2seats <![CDATA[<=]]> (SELECT ifnull(SUM(reserve_2seats),0) FROM reserve_info WHERE reserve_date=#{reserve_date} AND reserve_time=#{reserve_time})) 
+	then "disabled" END ) as cond
+	FROM cafe_info C WHERE C.cafe_id=#{cafe_id}
+	</select>
+	
+	<select id="viewAvailSeats" parameterType="com.cafe.gitteam1.reserve.ReserveVo" resultType="com.cafe.gitteam1.reserve.ReserveTimeVo">
+	SELECT
+	(avail_2seats - (SELECT ifnull(SUM(reserve_2seats),0) FROM reserve_info WHERE reserve_date=#{reserve_date} AND reserve_time=#{reserve_time})) AS seats2,
+	(avail_4seats - (SELECT ifnull(SUM(reserve_4seats),0) FROM reserve_info WHERE reserve_date=#{reserve_date} AND reserve_time=#{reserve_time})) AS seats4
+	FROM cafe_info
+	WHERE cafe_id=#{cafe_id}
+	</select>
+	
+	
+</mapper>

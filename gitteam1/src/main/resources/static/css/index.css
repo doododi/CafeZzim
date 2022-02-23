@@ -1,0 +1,192 @@
+@charset "UTF-8";
+@font-face {
+    font-family: 'SBAggroB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6{
+	font-family: "SBAggroB", "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+input, button, select, optgroup, textarea, label, .alert, .badge, .blockquote-footer, .btn, .navbar, .pagination, .valid-feedback, .invalid-feedback {
+    font-family: 'Noto Sans KR', "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+body{
+	font-family: 'Noto Sans KR', "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-weight:300;
+}
+
+.fz-12{	font-size:12px;}
+.fz-13{	font-size:13px;}
+.fz-14{	font-size:14px;}
+.fz-15{	font-size:15px;}
+.mypage-title{margin-left:1.5em;}
+/* 
+ * 카페 예약 메인 페이지
+ * 2022.01.03 
+ * 작성자 : 김성겸
+ */
+
+.cafe-find-wrap{
+	background-color:#fff;
+	display:flex;
+	border-radius:20px;
+	padding:10px;
+	flex-wrap:wrap;
+}
+.multiply{
+	mix-blend-mode: multiply;
+}
+.cafe-search-txt,.cafe-search-date{width:100%; padding:0 15px; margin-bottom:12px;}
+.cafe-search-txt label,
+.cafe-search-date label{display:block; font-size:13px;}
+
+.cafe-search-txt input,
+.cafe-search-date input{display:block; font-size:14px;border:0;width:100%;}
+.cafe-search-btn{width:100%;min-width: 110px;}
+.cafe-search-btn button.btn.btn-lg{width:100%;height: 100%;font-size: 14px;}
+
+.location-item{overflow:hidden;}
+.location-img{height:240px; position:relative; overflow:hidden;}
+.location-img img{position:absolute; top:50%; left:0; transform:translateY(-50%);}
+
+.location-desc{height:160px;}
+
+
+#menu-FAQ{padding-right:1.2rem;}
+.dropdown-menu.show[data-bs-popper]{margin-top: 0.35rem;left:-110px;}
+.dropdown-menu{font-weight:100; font-size:0.85rem;}
+
+
+/* 
+ * 카페 검색 페이지
+ * 2022.01.05
+ * 작성자 : 김성겸
+ */
+ 
+.search-item{overflow:hidden;}
+.search-item-img{
+	width:36%;
+	overflow:hidden;
+}
+.search-item-img .img-wrap{
+	padding:125% 0 0;
+	position:relative;
+}
+.search-item-img img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	transform: translate(-50%, -50%);
+}
+
+
+.search-item-desc{color:#222;}
+.search-item-desc p{margin-bottom:8px;}
+.img-profile{
+	max-width:30px;
+}
+
+
+/* 
+ * 상세 페이지 slider
+ * 2022.01.06 김성겸
+ */
+ 
+#slider .carousel-indicators{
+	position:absolute;
+	bottom:10px; 
+	left:0;
+	width:100%;
+	display:flex;
+	justify-content:center;
+}
+
+#slider .carousel-control-prev{
+	position:absolute;
+	left:0;
+	
+}
+
+.main-tool-bar-wrap{
+	padding:100px 0 0;
+	position:relative;
+}
+.main-tool-bar{
+	position:absolute;
+	top:0; left:0; width:100%;
+	padding:12px 0;
+}
+
+.main-tool-bar.main-tool-bar--scrolled{
+	width: 100%;
+  padding-right: var(--bs-gutter-x, 1rem);
+  padding-left: var(--bs-gutter-x, 1rem);
+  margin-right: auto;
+  margin-left: auto;
+	position:fixed;
+	top:68px;
+	left:0;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.main-tool-bar li.nav-item{width:33.3333%;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) {
+	.cafe-find-wrap{
+		border-radius:50px;
+		padding:10px;
+		flex-wrap:nowrap;
+	}
+	
+	.cafe-search-txt, .cafe-search-date {
+    width: 42%;
+    padding: 0 15px;
+    margin-bottom:0;
+	}
+	.cafe-search-date{border-left:1px solid #e7e7e7;}
+	.cafe-search-btn{width:16%;min-width: 110px;}
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+	.fz-12{
+		font-size:1rem;
+	}
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+
+/* X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+	
+	.search-item-img{
+		width:42%;
+	}
+	.search-item-img .img-wrap{
+		padding:100% 0 0;
+	}
+}
+
+/* XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {
+
+}
